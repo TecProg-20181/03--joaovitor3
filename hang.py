@@ -4,8 +4,7 @@ import string
 WORDLIST_FILENAME = "palavras.txt"
 
 class Words():
-    def __init__(self, guesses):
-        self.guesses = guesses
+    def __init__(self):
         self.lettersGuessed = []
         self.secretWord = self.loadWords().lower()
 
@@ -47,9 +46,10 @@ class Words():
 
 
 class Hangman(Words):
-    # guesses = 8
+    guesses = 8
     def __init__(self, guesses):
-        Words.__init__(self, guesses = guesses)
+        self.guesses = guesses
+        Words.__init__(self)
 
     def print_start_hangman(hangman_teste, self):
         secretWord = hangman_teste.secretWord
