@@ -14,14 +14,12 @@ class Words():
         take a while to finish.
         """
         print ("Loading word list from file...")
-        # inFile: file
         inFile = open(WORDLIST_FILENAME, 'r')
-        # line: string
         line = inFile.readline()
-        # wordlist: list of strings
         wordlist = str.split(line)
+        lista_menor_guesses = self.set_lista_menor_guesses(wordlist)
         print ("  ", len(wordlist), "words loaded.")
-        return random.choice(wordlist)
+        return random.choice(lista_menor_guesses)
 
     def isWordGuessed(self):
         for letter in self.secretWord:
@@ -45,29 +43,13 @@ class Words():
     def get_diff_letters(self, word):
         return {i:word.count(i) for i in word}
 
-    def check_different_letters_in_list(self, guesses):
-        reduced_word_list = []
-        for word in reduced_word_list:
-            if len(self.get_diff_letters(word)) < self.guesses:
-                reduced_word_list.append(word)
-
     def different_letters(self):
         diff_letters = len(self.get_diff_letters(self.secretWord))
         return diff_letters
 
-    def set_reduced_word_list(self, wordlist):
-        length_words = [len(i) for i in wordlist]
-        words_and_length = {}
-        words_and_length = dict(zip(wordlist, length_words))
-        reduced_word_list = [] # list with items number of letters smaller than guesses
-        for key, value in words_and_length.items():
-            if words_and_length[key] < self.guesses:
-                reduced_word_list.append(key)
-        return reduced_word_list
-
-    def set_lista_menor_guesses(self, reduced_word_list):
+    def set_lista_menor_guesses(self, wordlist):
         lista_menor_guesses = [] # lista com número de letras diferentes menor que tentativas
-        for word in reduced_word_list:
+        for word in wordlist:
             if len(self.get_diff_letters(word)) < self.guesses:
                 lista_menor_guesses.append(word)
         return lista_menor_guesses
@@ -81,8 +63,7 @@ class Words():
         inFile = open(WORDLIST_FILENAME, 'r')
         line = inFile.readline()
         wordlist = str.split(line)
-        reduced_word_list = self.set_reduced_word_list(wordlist)
-        lista_menor_guesses = self.set_lista_menor_guesses(reduced_word_list)
+        lista_menor_guesses = self.set_lista_menor_guesses(wordlist)
         print ("  ", len(wordlist), "words loaded.")
         return random.choice(lista_menor_guesses)
 
@@ -91,7 +72,7 @@ class Words():
             print('Choosing another word because the number of different'
                   ' letters is bigger than the guesses')
             print ('-------------')
-            self.secretWord = self.loadSpecificWord(self.guesses).lower()
+            self.secretWord = self.loadSpecificWords(self.guesses).lower()
             print ('I am thinking of a word that is', len(self.secretWord),\
                    'letters long.')
             print ('-------------')
@@ -175,7 +156,7 @@ class Hangman(Words):
                        self.secretWord, '.')
 
 def main():
-    guesses = 8
+    guesses = 5
     p = Hangman(guesses)
     p.while_hangman(p)
 
