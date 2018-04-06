@@ -10,8 +10,8 @@ class Words():
 
     def load_words(self):
         """
-        Depending on the size of the word list, this function may
-        take a while to finish.
+        Carrega as letras do arquivo e retorna uma palavra aleatória
+        de toda a lista.
         """
         print ("Loading word list from file...")
         inFile = open(WORDLIST_FILENAME, 'r')
@@ -22,6 +22,10 @@ class Words():
         return random.choice(lista_menor_guesses)
 
     def is_word_guessed(self):
+        """
+        Retorna True caso a palavra foi adivinhada anteriormente,
+        Retorna False caso a palavra não foi adivinhada anteriormente.
+        """
         for letter in self.secretWord:
             if letter in self.lettersGuessed:
                 pass
@@ -30,25 +34,41 @@ class Words():
         return True
 
     def get_guessed_word(self):
-
-         guessed = ''
-         return guessed
+        """
+        Retorna a palavra adivinhada pelo usuário.
+        """
+        guessed = ''
+        return guessed
 
     def set_game_letters(self):
+        """
+        Define as letras disponíveis para o jogo.
+        """
         import string
         # 'abcdefghijklmnopqrstuvwxyz'
         available = string.ascii_lowercase
         return available
 
     def get_diff_letters(self, word):
+        """
+        Retorna dicionário com o número de letras diferentes em uma palavra.
+        """
         return {i:word.count(i) for i in word}
 
     def different_letters(self):
+        """
+        Retorna número de letras diferentes na palavra secreta da forca.
+        """
         diff_letters = len(self.get_diff_letters(self.secretWord))
         return diff_letters
 
     def set_lista_menor_guesses(self, wordlist):
-        lista_menor_guesses = [] # lista com número de letras diferentes menor que tentativas
+        """
+        Define lista com palavras que possuem número de letras diferentes
+        menores que o número de tentativas.
+        """
+        # lista com número de letras diferentes menor que tentativas
+        lista_menor_guesses = []
         for word in wordlist:
             if len(self.get_diff_letters(word)) < self.guesses:
                 lista_menor_guesses.append(word)
@@ -56,8 +76,9 @@ class Words():
 
     def load_specific_word(self, guesses):
         """
-        Depending on the size of the word list, this function may
-        take a while to finish.
+        Carrega as letras do arquivo e retorna uma palavra aleatória
+        de toda a lista com palavras que possuem número de letras diferentes
+        menores que o número de tentativas.
         """
         print ("Loading word list from file...")
         inFile = open(WORDLIST_FILENAME, 'r')
@@ -68,6 +89,10 @@ class Words():
         return random.choice(lista_menor_guesses)
 
     def get_new_word(self):
+        """
+        Pega nova palavra secreta para a forca, em caso do número de tentativas
+        ser menor que o número de letras diferentes em uma palavra.
+        """
         if self.different_letters() > self.guesses:
             print('Choosing another word because the number of different'
                   ' letters is bigger than the guesses')
@@ -89,6 +114,9 @@ class Hangman(Words):
         Words.__init__(self)
 
     def print_start_hangman(self):
+        """
+        Printa informações iniciais do jogo.
+        """
         secretWord = self.secretWord
         print ('Welcome to the game, Hangam!')
         print ('I am thinking of a word that is', len(secretWord),\
@@ -100,6 +128,9 @@ class Hangman(Words):
         self.get_new_word()
 
     def get_available_letters(self):
+        """
+        Pega todas letras disponíveis no jogo e as printa
+        """
         available = self.set_game_letters()
         lettersGuessed = self.lettersGuessed
         for letter in available:
@@ -108,6 +139,10 @@ class Hangman(Words):
         print ('Available letters', available)
 
     def check_guessed_word(self, guessed, secretWord, lettersGuessed):
+        """
+        Checa se a palavra foi adivinhada ou não;
+        Ao final retorna a letra adivinhada.
+        """
         for letter in secretWord:
             if letter in lettersGuessed:
                 guessed += letter
@@ -116,6 +151,10 @@ class Hangman(Words):
         return guessed
 
     def get_letter(self, letter):
+        """
+        Define todos os fluxos do jogo e seus comportamentos:
+        Caso o usuário insira letra correta, incorreta ou não disponível.
+        """
         lettersGuessed = self.lettersGuessed
         secretWord = self.secretWord
 
@@ -140,6 +179,10 @@ class Hangman(Words):
         print ('------------')
 
     def while_hangman(hangman_objeto, self):
+        """
+        Loop em que o jogo roda;
+        Chama todas as funções anteriormente criadas.
+        """
         self.print_start_hangman()
         while (hangman_objeto.is_word_guessed() == False) and (self.guesses > 0):
             print ('You have ', self.guesses, 'guesses left.')
@@ -154,6 +197,9 @@ class Hangman(Words):
                        self.secretWord, '.')
 
 def main():
+    """
+    Função principal em que o objeto é instanciado
+    """
     guesses = 5
     p = Hangman(guesses)
     p.while_hangman(p)
