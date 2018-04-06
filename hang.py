@@ -139,9 +139,9 @@ class Hangman(Words):
             print ('Oops! That letter is not in my word: ',  guessed)
         print ('------------')
 
-    def while_hangman(hangman_teste, self):
+    def while_hangman(hangman_objeto, self):
         self.print_start_hangman()
-        while (hangman_teste.is_word_guessed() == False) and (self.guesses > 0):
+        while (hangman_objeto.is_word_guessed() == False) and (self.guesses > 0):
             print ('You have ', self.guesses, 'guesses left.')
             self.get_available_letters()
             letter = input('Please guess a letter: ')
