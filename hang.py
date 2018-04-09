@@ -33,13 +33,6 @@ class Words():
                 return False
         return True
 
-    def get_guessed_word(self):
-        """
-        Retorna a palavra adivinhada pelo usuário.
-        """
-        guessed = ''
-        return guessed
-
     def set_game_letters(self):
         """
         Define as letras disponíveis para o jogo.
@@ -48,6 +41,17 @@ class Words():
         # 'abcdefghijklmnopqrstuvwxyz'
         available = string.ascii_lowercase
         return available
+
+    def get_available_letters(self):
+        """
+        Pega todas letras disponíveis no jogo e as printa
+        """
+        available = self.set_game_letters()
+        lettersGuessed = self.lettersGuessed
+        for letter in available:
+            if letter in lettersGuessed:
+                available = available.replace(letter, '')
+        print ('Available letters', available)
 
     def get_diff_letters(self, word):
         """
@@ -88,6 +92,18 @@ class Words():
         print ("  ", len(wordlist), "words loaded.")
         return random.choice(lista_menor_guesses)
 
+    def show_letter_guessed(self, guessed, secretWord, lettersGuessed):
+        """
+        Retorna a letra caso seja adivinhada;
+        Caso não seja adivinhada mantém o '_ '
+        """
+        for letter in secretWord:
+            if letter in lettersGuessed:
+                guessed += letter
+            else:
+                guessed += '_ '
+        return guessed
+
     def get_new_word(self):
         """
         Pega nova palavra secreta para a forca, em caso do número de tentativas
@@ -127,30 +143,7 @@ class Hangman(Words):
         print ('-------------')
         self.get_new_word()
 
-    def get_available_letters(self):
-        """
-        Pega todas letras disponíveis no jogo e as printa
-        """
-        available = self.set_game_letters()
-        lettersGuessed = self.lettersGuessed
-        for letter in available:
-            if letter in lettersGuessed:
-                available = available.replace(letter, '')
-        print ('Available letters', available)
-
-    def check_guessed_word(self, guessed, secretWord, lettersGuessed):
-        """
-        Checa se a palavra foi adivinhada ou não;
-        Ao final retorna a letra adivinhada.
-        """
-        for letter in secretWord:
-            if letter in lettersGuessed:
-                guessed += letter
-            else:
-                guessed += '_ '
-        return guessed
-
-    def get_letter(self, letter):
+    def hangman_game_flow(self, letter):
         """
         Define todos os fluxos do jogo e seus comportamentos:
         Caso o usuário insira letra correta, incorreta ou não disponível.
@@ -159,26 +152,26 @@ class Hangman(Words):
         secretWord = self.secretWord
 
         if letter in lettersGuessed:
-            guessed = self.get_guessed_word()
-            guessed = self.check_guessed_word(guessed, secretWord,\
+            guessed = ''
+            guessed = self.show_letter_guessed(guessed, secretWord,\
                                               lettersGuessed)
             print ('Oops! You have already guessed that letter: ', guessed)
         elif letter in secretWord:
             lettersGuessed.append(letter)
-            guessed = self.get_guessed_word()
-            guessed = self.check_guessed_word(guessed, secretWord,\
+            guessed = ''
+            guessed = self.show_letter_guessed(guessed, secretWord,\
                                               lettersGuessed)
             print ('Good Guess: ', guessed)
         else:
             self.guesses -=1
             lettersGuessed.append(letter)
-            guessed = self.get_guessed_word()
-            guessed = self.check_guessed_word(guessed, secretWord,\
+            guessed = ''
+            guessed = self.show_letter_guessed(guessed, secretWord,\
                                               lettersGuessed)
             print ('Oops! That letter is not in my word: ',  guessed)
         print ('------------')
 
-    def while_hangman(hangman_objeto, self):
+    def hangman_loop(hangman_objeto, self):
         """
         Loop em que o jogo roda;
         Chama todas as funções anteriormente criadas.
@@ -188,7 +181,7 @@ class Hangman(Words):
             print ('You have ', self.guesses, 'guesses left.')
             self.get_available_letters()
             letter = input('Please guess a letter: ')
-            self.get_letter(letter)
+            self.hangman_game_flow(letter)
         else:
             if self.is_word_guessed() == True:
                 print ('Congratulations, you won!')
@@ -200,8 +193,8 @@ def main():
     """
     Função principal em que o objeto é instanciado
     """
-    guesses = 5
+    guesses = 8
     p = Hangman(guesses)
-    p.while_hangman(p)
+    p.hangman_loop(p)
 
 main()
