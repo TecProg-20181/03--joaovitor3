@@ -6,19 +6,22 @@ WORDLIST_FILENAME = "words.txt"
 class Words():
     def __init__(self):
         self.lettersGuessed = []
-        self.secretWord = self.load_words().lower()
+        self.secretWord = self.load_words(self.guesses,\
+                                          self.set_wordlist()).lower()
 
-    def load_words(self):
+    def load_words(self, guesses, lista=None):
         """
         Carrega as letras do arquivo e retorna uma palavra aleatória
         de toda a lista.
         """
         print ("Loading word list from file...")
+        return random.choice(lista)
+
+    def set_wordlist(self):
         inFile = open(WORDLIST_FILENAME, 'r')
         line = inFile.readline()
         wordlist = str.split(line)
-        print ("  ", len(wordlist), "words loaded.")
-        return random.choice(wordlist)
+        return wordlist
 
     def is_word_guessed(self):
         """
@@ -27,10 +30,9 @@ class Words():
         """
         for letter in self.secretWord:
             if letter in self.lettersGuessed:
-                pass
+                return True
             else:
                 return False
-        return True
 
     def set_game_letters(self):
         """
@@ -77,20 +79,6 @@ class Words():
                 lista_menor_guesses.append(word)
         return lista_menor_guesses
 
-    def load_specific_word(self, guesses):
-        """
-        Carrega as letras do arquivo e retorna uma palavra aleatória
-        de toda a lista com palavras que possuem número de letras diferentes
-        menores que o número de tentativas.
-        """
-        print ("Loading word list from file...")
-        inFile = open(WORDLIST_FILENAME, 'r')
-        line = inFile.readline()
-        wordlist = str.split(line)
-        lista_menor_guesses = self.set_lista_menor_guesses(wordlist)
-        print ("  ", len(wordlist), "words loaded.")
-        return random.choice(lista_menor_guesses)
-
     def show_letter_guessed(self, guessed, secretWord, lettersGuessed):
         """
         Retorna a letra caso seja adivinhada;
@@ -112,7 +100,9 @@ class Words():
             print('Choosing another word because the number of different'
                   ' letters is bigger than the guesses')
             print ('-------------')
-            self.secretWord = self.load_specific_word(self.guesses).lower()
+            self.secretWord = self.load_words(self.guesses,\
+                                              self.set_lista_menor_guesses\
+                                              (self.set_wordlist())).lower()
             print ('I am thinking of a word that is', len(self.secretWord),\
                    'letters long.')
             print ('-------------')
@@ -140,7 +130,7 @@ class Hangman(Words):
         print('Your word have', self.different_letters() ,\
               'different letters')
         print ('-------------')
-        self.load_words()
+        self.load_words(self.guesses, self.set_wordlist())
         self.get_new_word()
 
     def hangman_game_flow(self, letter):
@@ -183,7 +173,8 @@ class Hangman(Words):
             letter = input('Please guess a letter: ')
             self.hangman_game_flow(letter)
         else:
-            if self.is_word_guessed() == True:
+            if self.is_word_guessed() == True and len(self.secretWord) ==\
+                                                  len(self.lettersGuessed):
                 print ('Congratulations, you won!')
             else:
                 print ('Sorry, you ran out of guesses. The word was ',\
@@ -193,7 +184,7 @@ def main():
     """
     Função principal em que o objeto é instanciado
     """
-    guesses = 8
+    guesses = 5
     p = Hangman(guesses)
     p.hangman_loop(p)
 
