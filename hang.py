@@ -17,9 +17,8 @@ class Words():
         inFile = open(WORDLIST_FILENAME, 'r')
         line = inFile.readline()
         wordlist = str.split(line)
-        lista_menor_guesses = self.set_lista_menor_guesses(wordlist)
         print ("  ", len(wordlist), "words loaded.")
-        return random.choice(lista_menor_guesses)
+        return random.choice(wordlist)
 
     def is_word_guessed(self):
         """
@@ -113,7 +112,7 @@ class Words():
             print('Choosing another word because the number of different'
                   ' letters is bigger than the guesses')
             print ('-------------')
-            self.secretWord = self.load_specific_words(self.guesses).lower()
+            self.secretWord = self.load_specific_word(self.guesses).lower()
             print ('I am thinking of a word that is', len(self.secretWord),\
                    'letters long.')
             print ('-------------')
@@ -141,6 +140,7 @@ class Hangman(Words):
         print('Your word have', self.different_letters() ,\
               'different letters')
         print ('-------------')
+        self.load_words()
         self.get_new_word()
 
     def hangman_game_flow(self, letter):
