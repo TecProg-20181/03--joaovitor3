@@ -18,6 +18,9 @@ class Words():
         return random.choice(lista)
 
     def set_wordlist(self):
+        """
+        Retorna lista de palavras do jogo, carregadas do arquivo txt
+        """
         inFile = open(WORDLIST_FILENAME, 'r')
         line = inFile.readline()
         wordlist = str.split(line)
