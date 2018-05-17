@@ -1,5 +1,6 @@
 import random
 import string
+import sys
 
 WORDLIST_FILENAME = "words.txt"
 
@@ -21,7 +22,12 @@ class Words():
         """
         Retorna lista de palavras do jogo, carregadas do arquivo txt
         """
-        inFile = open(WORDLIST_FILENAME, 'r')
+        try:
+            inFile = open(WORDLIST_FILENAME, 'r')
+        except FileNotFoundError:
+            print('File with words to guess not found\n')
+            print('Exiting...')
+            sys.exit(1)
         line = inFile.readline()
         wordlist = str.split(line)
         return wordlist
@@ -143,25 +149,59 @@ class Hangman(Words):
         """
         lettersGuessed = self.lettersGuessed
         secretWord = self.secretWord
-
-        if letter in lettersGuessed:
-            guessed = ''
-            guessed = self.show_letter_guessed(guessed, secretWord,\
-                                              lettersGuessed)
-            print ('Oops! You have already guessed that letter: ', guessed)
-        elif letter in secretWord:
-            lettersGuessed.append(letter)
-            guessed = ''
-            guessed = self.show_letter_guessed(guessed, secretWord,\
-                                              lettersGuessed)
-            print ('Good Guess: ', guessed)
-        else:
-            self.guesses -=1
-            lettersGuessed.append(letter)
-            guessed = ''
-            guessed = self.show_letter_guessed(guessed, secretWord,\
-                                              lettersGuessed)
-            print ('Oops! That letter is not in my word: ',  guessed)
+        try:
+            if len(letter) == 1:
+                if letter in lettersGuessed:
+                    guessed = ''
+                    guessed = self.show_letter_guessed(guessed, secretWord,\
+                                                      lettersGuessed)
+                    print ('Oops! You have already guessed that letter: ', guessed)
+                elif letter in secretWord:
+                    lettersGuessed.append(letter)
+                    guessed = ''
+                    guessed = self.show_letter_guessed(guessed, secretWord,\
+                                                      lettersGuessed)
+                    print ('Good Guess: ', guessed)
+                elif letter.isdigit():
+                    guessed = ''
+                    guessed = self.show_letter_guessed(guessed, secretWord,\
+                                                      lettersGuessed)
+                    print ('\nYou have to insert one letter, not numbers!\n')
+                    print ('Word to guess:', guessed)
+                elif letter.isspace():
+                    guessed = ''
+                    guessed = self.show_letter_guessed(guessed, secretWord,\
+                                                      lettersGuessed)
+                    print ('\nYou have to insert one letter, not whitespaces!\n')
+                    print ('Word to guess:', guessed)
+                elif letter in string.punctuation:
+                    guessed = ''
+                    guessed = self.show_letter_guessed(guessed, secretWord,\
+                                                      lettersGuessed)
+                    print ('\nYou have to insert one letter,'
+                           'not special characters!\n')
+                    print ('Word to guess:', guessed)
+                else:
+                    self.guesses -=1
+                    lettersGuessed.append(letter)
+                    guessed = ''
+                    guessed = self.show_letter_guessed(guessed, secretWord,\
+                                                      lettersGuessed)
+                    print ('Oops! That letter is not in my word: ',  guessed)
+            elif len(letter) == 0:
+                guessed = ''
+                guessed = self.show_letter_guessed(guessed, secretWord,\
+                                                  lettersGuessed)
+                print('\nYour guess must be one letter, not an empty value!\n')
+                print ('Word to guess:', guessed)
+            else:
+                guessed = ''
+                guessed = self.show_letter_guessed(guessed, secretWord,\
+                                                  lettersGuessed)
+                print('\nYour guess must be just one letter!\n')
+                print ('Word to guess:', guessed)
+        except ValueError:
+            print('Input value not recognized!\nInsert another word!')
         print ('------------')
 
     def hangman_loop(hangman_objeto, self):
@@ -187,7 +227,7 @@ def main():
     """
     Função principal em que o objeto é instanciado
     """
-    guesses = 5
+    guesses = 8
     p = Hangman(guesses)
     p.hangman_loop(p)
 
