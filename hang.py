@@ -67,14 +67,27 @@ class Words():
         """
         Retorna dicionário com o número de letras diferentes em uma palavra.
         """
-        return {i:word.count(i) for i in word}
+        try:
+            return {i:word.count(i) for i in word}
+        except TypeError:
+            print('Error trying to get different number of letters in'
+                  'word to guess!')
+            print('Exiting...')
+            sys.exit(1)
 
     def different_letters(self):
         """
         Retorna número de letras diferentes na palavra secreta da forca.
         """
-        diff_letters = len(self.get_diff_letters(self.secretWord))
-        return diff_letters
+        try:
+            diff_letters = len(self.get_diff_letters(self.secretWord))
+            return diff_letters
+        except TypeError:
+            print('Error trying to get different number of letters in'
+                  'word to guess!')
+            print('Exiting...')
+            sys.exit(1)
+
 
     def set_lista_menor_guesses(self, wordlist):
         """
