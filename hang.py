@@ -63,7 +63,7 @@ class Words():
                 available = available.replace(letter, '')
         print ('Available letters', available)
 
-    def get_diff_letters(self, word):
+    def get_diff_letters(self, word=''):
         """
         Retorna dicionário com o número de letras diferentes em uma palavra.
         """
@@ -89,7 +89,7 @@ class Words():
             sys.exit(1)
 
 
-    def set_lista_menor_guesses(self, wordlist):
+    def set_lista_menor_guesses(self, wordlist=''):
         """
         Define lista com palavras que possuem número de letras diferentes
         menores que o número de tentativas.
@@ -101,7 +101,7 @@ class Words():
                 lista_menor_guesses.append(word)
         return lista_menor_guesses
 
-    def show_letter_guessed(self, guessed, secretWord, lettersGuessed):
+    def show_letter_guessed(self, guessed='', secretWord='', lettersGuessed=''):
         """
         Retorna a letra caso seja adivinhada;
         Caso não seja adivinhada mantém o '_ '
@@ -155,7 +155,7 @@ class Hangman(Words):
         self.load_words(self.guesses, self.set_wordlist())
         self.get_new_word()
 
-    def hangman_game_flow(self, letter):
+    def hangman_game_flow(self, letter=''):
         """
         Define todos os fluxos do jogo e seus comportamentos:
         Caso o usuário insira letra correta, incorreta ou não disponível.
